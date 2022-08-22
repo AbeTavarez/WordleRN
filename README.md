@@ -7,5 +7,7 @@ All the fun of the Wordle Game in a React Native mobile application.
 
 ## Details
 
-React Native
-Expo
+
+### Tech Stack
+  - React Native
+  - Expo
