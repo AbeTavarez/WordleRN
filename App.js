@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { colors } from './src/constants';
@@ -9,9 +10,29 @@ export default function App() {
   const word = 'hello';
   const letters = word.split('');
 
-  const rows = new Array(NUMBER_OF_TRIES).fill(
-    new Array(letters.length).fill('a')
+  const [rows, setRows] = useState(
+    new Array(NUMBER_OF_TRIES).fill(new Array(letters.length).fill(''))
   );
+
+  //* Rows are the nested arrays and Columns are the values in the nested array.
+  //* [
+  //*   ['col1', 'col2'], //row1
+  //*   ['col1', 'col2'], //row2
+  //* ]
+  const [currRow, setCurrRow] = useState(0); // start at first row
+  const [currCol, setCurrCol] = useState(0); // start at first column
+
+  const copyBidirectionalArr = (arr) => [...arr.map((row) => [...row])];
+
+  const onKeyPressed = (key) => {
+    // console.warn(key);
+    const updatedRows = copyBidirectionalArr(rows);
+    updatedRows[currRow][currCol] = key;
+    setRows(updatedRows);
+    setCurrCol(currCol + 1);
+  };
+
+  const isCellActive = (row, col) => row === currRow && col === currCol;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -19,10 +40,19 @@ export default function App() {
       <Text style={styles.title}>Wordle</Text>
 
       <View style={styles.map}>
-        {rows.map((row) => (
+        {rows.map((row, rowIdx) => (
           <View style={styles.row}>
-            {row.map((cell) => (
-              <View style={styles.cell}>
+            {row.map((cell, cellIdx) => (
+              <View
+                style={[
+                  styles.cell,
+                  {
+                    borderColor: isCellActive(rowIdx, cellIdx)
+                      ? colors.grey
+                      : colors.darkgrey
+                  }
+                ]}
+              >
                 <Text style={styles.cellText}>{cell.toUpperCase()}</Text>
               </View>
             ))}
@@ -30,7 +60,7 @@ export default function App() {
         ))}
       </View>
 
-      <Keyboard />
+      <Keyboard onKeyPressed={onKeyPressed} />
     </SafeAreaView>
   );
 }
