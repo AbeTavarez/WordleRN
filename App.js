@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { colors } from './src/constants';
+import { colors, CLEAR } from './src/constants';
 import Keyboard from './src/Keyboard/Keyboard';
 
 const NUMBER_OF_TRIES = 6;
@@ -27,9 +27,24 @@ export default function App() {
   const onKeyPressed = (key) => {
     // console.warn(key);
     const updatedRows = copyBidirectionalArr(rows);
-    updatedRows[currRow][currCol] = key;
-    setRows(updatedRows);
-    setCurrCol(currCol + 1);
+
+    // handles user pressing on CLEAR
+    if (key === CLEAR) {
+      const prevCol = currCol - 1;
+      if (prevCol >= 0) {
+        updatedRows[currRow][prevCol] = '';
+        setRows(updatedRows);
+        setCurrCol(prevCol);
+      }
+      return;
+    }
+
+    // handles user pressing on letters
+    if (currCol < rows[0].length) {
+      updatedRows[currRow][currCol] = key;
+      setRows(updatedRows);
+      setCurrCol(currCol + 1);
+    }
   };
 
   const isCellActive = (row, col) => row === currRow && col === currCol;
@@ -41,9 +56,10 @@ export default function App() {
 
       <View style={styles.map}>
         {rows.map((row, rowIdx) => (
-          <View style={styles.row}>
+          <View key={`row-${rowIdx}`} style={styles.row}>
             {row.map((cell, cellIdx) => (
               <View
+                key={`cell-${cellIdx}-${rowIdx}`}
                 style={[
                   styles.cell,
                   {
