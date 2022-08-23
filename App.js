@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { colors, CLEAR } from './src/constants';
+import { colors, CLEAR, ENTER } from './src/constants';
 import Keyboard from './src/Keyboard/Keyboard';
 
 const NUMBER_OF_TRIES = 6;
@@ -35,6 +35,14 @@ export default function App() {
         updatedRows[currRow][prevCol] = '';
         setRows(updatedRows);
         setCurrCol(prevCol);
+      }
+      return;
+    }
+    // handles user pressing on ENTER
+    if (key === ENTER) {
+      if (currCol === rows[0].length) {
+        setCurrRow(currRow + 1);
+        setCurrCol(0);
       }
       return;
     }
