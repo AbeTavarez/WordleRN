@@ -57,6 +57,19 @@ export default function App() {
 
   const isCellActive = (row, col) => row === currRow && col === currCol;
 
+  const getCellBGColor = (cellLetter, rowIdx, colIdx) => {
+    if (rowIdx >= currRow) {
+      return colors.black;
+    }
+    if (cellLetter === letters[colIdx]) {
+      return colors.primary;
+    }
+    if (letters.includes(cellLetter)) {
+      return colors.secondary;
+    }
+    return colors.darkgrey;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
@@ -65,7 +78,7 @@ export default function App() {
       <View style={styles.map}>
         {rows.map((row, rowIdx) => (
           <View key={`row-${rowIdx}`} style={styles.row}>
-            {row.map((cell, cellIdx) => (
+            {row.map((cellLetter, cellIdx) => (
               <View
                 key={`cell-${cellIdx}-${rowIdx}`}
                 style={[
@@ -73,11 +86,12 @@ export default function App() {
                   {
                     borderColor: isCellActive(rowIdx, cellIdx)
                       ? colors.grey
-                      : colors.darkgrey
+                      : colors.darkgrey,
+                    backgroundColor: getCellBGColor(cellLetter, rowIdx, cellIdx)
                   }
                 ]}
               >
-                <Text style={styles.cellText}>{cell.toUpperCase()}</Text>
+                <Text style={styles.cellText}>{cellLetter.toUpperCase()}</Text>
               </View>
             ))}
           </View>
