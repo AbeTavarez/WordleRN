@@ -57,7 +57,8 @@ export default function App() {
 
   const isCellActive = (row, col) => row === currRow && col === currCol;
 
-  const getCellBGColor = (cellLetter, rowIdx, colIdx) => {
+  const getCellBGColor = (rowIdx, colIdx) => {
+    const cellLetter = rows[rowIdx][colIdx];
     if (rowIdx >= currRow) {
       return colors.black;
     }
@@ -69,6 +70,16 @@ export default function App() {
     }
     return colors.darkgrey;
   };
+
+  // Cell Colors
+  const getAllColorLetters = (color) => {
+    return rows.flatMap((row, rowIdx) =>
+      row.filter((cell, cellIdx) => getCellBGColor(rowIdx, cellIdx) === color)
+    );
+  };
+  const greenCaps = getAllColorLetters(colors.primary);
+  const yellowCaps = getAllColorLetters(colors.secondary);
+  const greyCaps = getAllColorLetters(colors.darkgrey);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -87,7 +98,7 @@ export default function App() {
                     borderColor: isCellActive(rowIdx, cellIdx)
                       ? colors.grey
                       : colors.darkgrey,
-                    backgroundColor: getCellBGColor(cellLetter, rowIdx, cellIdx)
+                    backgroundColor: getCellBGColor(rowIdx, cellIdx)
                   }
                 ]}
               >
@@ -98,7 +109,12 @@ export default function App() {
         ))}
       </View>
 
-      <Keyboard onKeyPressed={onKeyPressed} />
+      <Keyboard
+        onKeyPressed={onKeyPressed}
+        greenCaps={greenCaps}
+        yellowCaps={yellowCaps}
+        greyCaps={greyCaps}
+      />
     </SafeAreaView>
   );
 }
