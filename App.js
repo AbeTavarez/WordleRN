@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { colors, CLEAR, ENTER } from './src/constants';
 import Keyboard from './src/Keyboard/Keyboard';
 
@@ -21,10 +21,19 @@ export default function App() {
   //* ]
   const [currRow, setCurrRow] = useState(0); // start at first row
   const [currCol, setCurrCol] = useState(0); // start at first column
+  const [gameState, setGameState] = useState('playing'); // playing, won, loss
+
+  // Game State
+  useEffect(() => {
+    if (currRow > 0) {
+      checkGameState();
+    }
+  }, [currRow]);
 
   const copyBidirectionalArr = (arr) => [...arr.map((row) => [...row])];
 
   const onKeyPressed = (key) => {
+    if (gameState !== 'playing') return;
     // console.warn(key);
     const updatedRows = copyBidirectionalArr(rows);
 
@@ -81,6 +90,26 @@ export default function App() {
   const yellowCaps = getAllColorLetters(colors.secondary);
   const greyCaps = getAllColorLetters(colors.darkgrey);
 
+  //* ===== Game State Functions
+  const checkGameState = () => {
+    if (checkIfWon()) {
+      Alert.alert('Winner Winner Chicken Dinner!');
+      setGameState('won');
+    } else if (checkIfLoss()) {
+      Alert.alert('Oh no, better luck tomorrow!');
+      setGameState('loss');
+    }
+  };
+
+  const checkIfWon = () => {
+    // get the previous row to check
+    const prevRow = rows[currRow - 1];
+    // if every letter in prevRow is in the same index as letters array then is true
+    return prevRow.every((letter, i) => letter === letters[i]);
+  };
+
+  const checkIfLoss = () => currRow === rows.length;
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
@@ -134,7 +163,6 @@ const styles = StyleSheet.create({
   },
   map: {
     alignSelf: 'stretch',
-    height: 100,
     marginTop: 20
   },
   row: {
