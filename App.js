@@ -3,12 +3,25 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { colors, CLEAR, ENTER, colorsToEmoji } from './src/constants';
 import Keyboard from './src/Keyboard/Keyboard';
+import * as Clipboard from 'expo-clipboard';
+import WordList from './src/words';
 
 const NUMBER_OF_TRIES = 6;
 
+const getDayOfTheYear = () => {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = now - start;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const day = Math.floor(diff / oneDay);
+  return day;
+};
+
+const wordOfTheDay = WordList[getDayOfTheYear()];
+
 export default function App() {
-  const word = 'hello';
-  const letters = word.split('');
+  // const word = 'hello';
+  const letters = wordOfTheDay.split('');
 
   const [rows, setRows] = useState(
     new Array(NUMBER_OF_TRIES).fill(new Array(letters.length).fill(''))
@@ -92,12 +105,12 @@ export default function App() {
 
   //* ===== Game State Functions
   const checkGameState = () => {
-    if (checkIfWon()) {
+    if (checkIfWon() && gameState !== 'won') {
       Alert.alert('Winner Winner', 'Chicken Dinner!', [
         { text: 'Share', onPress: shareScore }
       ]);
       setGameState('won');
-    } else if (checkIfLoss()) {
+    } else if (checkIfLoss() && gameState !== 'loss') {
       Alert.alert('Oh no, better luck tomorrow!');
       setGameState('loss');
     }
@@ -110,10 +123,10 @@ export default function App() {
     return prevRow.every((letter, i) => letter === letters[i]);
   };
 
-  const checkIfLoss = () => currRow === rows.length;
+  const checkIfLoss = () => !checkIfWon() && currRow === rows.length;
 
   const shareScore = () => {
-    const shareText = rows
+    const textMap = rows
       .map((row, rowsIdx) =>
         row
           .map(
@@ -123,7 +136,9 @@ export default function App() {
       )
       .filter((row) => row)
       .join('\n');
-    console.log(shareText);
+    const shareText = `Wordle \n${textMap} \n#wordle #palabreo`;
+    Clipboard.setStringAsync(shareText);
+    Alert.alert('Score copied', 'Share it on social media');
   };
 
   return (
