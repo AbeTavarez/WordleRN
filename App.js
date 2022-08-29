@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
-import { colors, CLEAR, ENTER } from './src/constants';
+import { colors, CLEAR, ENTER, colorsToEmoji } from './src/constants';
 import Keyboard from './src/Keyboard/Keyboard';
 
 const NUMBER_OF_TRIES = 6;
@@ -93,7 +93,9 @@ export default function App() {
   //* ===== Game State Functions
   const checkGameState = () => {
     if (checkIfWon()) {
-      Alert.alert('Winner Winner Chicken Dinner!');
+      Alert.alert('Winner Winner', 'Chicken Dinner!', [
+        { text: 'Share', onPress: shareScore }
+      ]);
       setGameState('won');
     } else if (checkIfLoss()) {
       Alert.alert('Oh no, better luck tomorrow!');
@@ -109,6 +111,20 @@ export default function App() {
   };
 
   const checkIfLoss = () => currRow === rows.length;
+
+  const shareScore = () => {
+    const shareText = rows
+      .map((row, rowsIdx) =>
+        row
+          .map(
+            (cell, cellIdx) => colorsToEmoji[getCellBGColor(rowsIdx, cellIdx)]
+          )
+          .join('')
+      )
+      .filter((row) => row)
+      .join('\n');
+    console.log(shareText);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
