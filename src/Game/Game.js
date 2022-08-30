@@ -4,6 +4,7 @@ import { colors, CLEAR, ENTER, colorsToEmoji } from '../constants';
 import Keyboard from '../Keyboard/Keyboard';
 import * as Clipboard from 'expo-clipboard';
 import WordList from '../words';
+import { styles } from './styles';
 
 const NUMBER_OF_TRIES = 6;
 
@@ -174,32 +175,5 @@ const Game = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  map: {
-    alignSelf: 'stretch',
-    marginTop: 20
-  },
-  row: {
-    alignSelf: 'stretch',
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  cell: {
-    borderColor: colors.grey,
-    borderWidth: 3,
-    flex: 1,
-    aspectRatio: 1,
-    margin: 3,
-    maxWith: 70,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  cellText: {
-    color: colors.grey,
-    fontWeight: 'bold',
-    fontSize: 28
-  }
-});
 
 export default Game;
