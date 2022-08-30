@@ -24,7 +24,7 @@ const Keyboard = ({
           {keyRow.map((key) => (
             <Pressable
               onPress={() => onKeyPressed(key)}
-              disabled={greenCaps.includes(key)}
+              disabled={greyCaps.includes(key)}
               key={key}
               style={[
                 styles.key,

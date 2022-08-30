@@ -144,7 +144,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      <Text style={styles.title}>Wordle</Text>
+      <Text style={styles.title}>Palabreo</Text>
 
       <View style={styles.map}>
         {rows.map((row, rowIdx) => (
