@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
+import { Text, View, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { colors, CLEAR, ENTER, colorsToEmoji } from '../constants';
 import Keyboard from '../Keyboard/Keyboard';
 import * as Clipboard from 'expo-clipboard';
 import WordList from '../words';
 import { styles } from './styles';
 import { copyBidirectionalArr, getDayOfTheYear } from '../utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NUMBER_OF_TRIES = 6;
 
@@ -27,6 +28,7 @@ const Game = () => {
   const [currRow, setCurrRow] = useState(0); // start at first row
   const [currCol, setCurrCol] = useState(0); // start at first column
   const [gameState, setGameState] = useState('playing'); // playing, won, loss
+  const [gameDataLoaded, setGameDataLoaded] = useState(false);
 
   // Game State
   useEffect(() => {
@@ -34,6 +36,47 @@ const Game = () => {
       checkGameState();
     }
   }, [currRow]);
+
+  // Async data storage
+
+  useEffect(() => {
+    // run func when any of the dependencies changed
+    if (gameDataLoaded) {
+      persistState();
+    }
+  }, [rows, currCol, currCol, gameState]);
+
+  useEffect(() => {
+    readState();
+  }, []);
+
+  const persistState = async () => {
+    const data = {
+      rows,
+      currRow,
+      currCol,
+      gameState
+    };
+    const dataString = JSON.stringify(data);
+    console.log('saving data...');
+    console.log(dataString);
+    await AsyncStorage.setItem('@game', dataString);
+  };
+
+  const readState = async () => {
+    const dataString = await AsyncStorage.getItem('@game');
+    try {
+      const data = JSON.parse(dataString);
+      console.log(data);
+      setRows(data.rows);
+      setCurrRow(data.currRow);
+      setCurrCol(data.currCol);
+      setGameState(data.gameState);
+    } catch (e) {
+      console.log("Couldn't parse the state data from async storage");
+    }
+    setGameDataLoaded(true);
+  };
 
   const onKeyPressed = (key) => {
     if (gameState !== 'playing') return;
@@ -130,6 +173,10 @@ const Game = () => {
     Clipboard.setStringAsync(shareText);
     Alert.alert('Score copied', 'Share it on social media');
   };
+
+  if (!gameDataLoaded) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <>
