@@ -10,3 +10,10 @@ export const getDayOfTheYear = () => {
   const day = Math.floor(diff / oneDay);
   return day;
 };
+
+// get Current year
+export const getCurrentYear = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  return year;
+};

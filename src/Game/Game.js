@@ -5,15 +5,19 @@ import Keyboard from '../Keyboard/Keyboard';
 import * as Clipboard from 'expo-clipboard';
 import WordList from '../words';
 import { styles } from './styles';
-import { copyBidirectionalArr, getDayOfTheYear } from '../utils';
+import {
+  copyBidirectionalArr,
+  getDayOfTheYear,
+  getCurrentYear
+} from '../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NUMBER_OF_TRIES = 6;
-
 const wordOfTheDay = WordList[getDayOfTheYear()];
+const dayKey = `day_${getDayOfTheYear()}:${getCurrentYear()}`; // TODO: refactor to include the year as well
 
 const Game = () => {
-  // const word = 'hello';
+  // AsyncStorage.removeItem('@game');
   const letters = wordOfTheDay.split('');
 
   const [rows, setRows] = useState(
@@ -51,29 +55,38 @@ const Game = () => {
   }, []);
 
   const persistState = async () => {
-    const data = {
+    const todaysData = {
       rows,
       currRow,
       currCol,
       gameState
     };
-    const dataString = JSON.stringify(data);
-    console.log('saving data...');
-    console.log(dataString);
-    await AsyncStorage.setItem('@game', dataString);
+    try {
+      // reads game state data if exists
+      const existingString = await AsyncStorage.getItem('@game');
+      const existingState = existingString ? JSON.parse(existingString) : {};
+      // updates game state data
+      existingState[dayKey] = todaysData;
+      // writes game state data to async storage
+      const dataString = JSON.stringify(existingState);
+      console.log(' ::: Saving :::', dataString);
+      await AsyncStorage.setItem('@game', dataString);
+    } catch (e) {
+      console.log('Error storing game data to async storage', e);
+    }
   };
 
   const readState = async () => {
     const dataString = await AsyncStorage.getItem('@game');
     try {
       const data = JSON.parse(dataString);
-      console.log(data);
-      setRows(data.rows);
-      setCurrRow(data.currRow);
-      setCurrCol(data.currCol);
-      setGameState(data.gameState);
+      const day = data[dayKey]; // access todays data from obj
+      setRows(day.rows);
+      setCurrRow(day.currRow);
+      setCurrCol(day.currCol);
+      setGameState(day.gameState);
     } catch (e) {
-      console.log("Couldn't parse the state data from async storage");
+      console.log("Couldn't parse the state data from async storage", e);
     }
     setGameDataLoaded(true);
   };
