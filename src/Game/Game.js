@@ -7,6 +7,7 @@ import WordList from '../words';
 import { styles } from './styles';
 import { copyBidirectionalArr, getDayOfTheYear, getDayKey } from '../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import EndScreen from '../EndScreen';
 
 const NUMBER_OF_TRIES = 6;
 const wordOfTheDay = WordList[getDayOfTheYear()];
@@ -183,8 +184,11 @@ const Game = () => {
     Alert.alert('Score copied', 'Share it on social media');
   };
 
-  if (!gameDataLoaded) {
-    return <ActivityIndicator />;
+  if (!gameDataLoaded) return <ActivityIndicator />;
+
+  if (gameState !== 'playing') {
+    console.log(gameState);
+    return <EndScreen won={gameState === 'won'} />;
   }
 
   return (
