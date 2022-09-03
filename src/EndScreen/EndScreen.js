@@ -11,7 +11,7 @@ const Number = ({ number, label }) => {
   );
 };
 
-const GuessDistribution = ({ position, amount, percentage }) => {
+const GuessDistributionLine = ({ position, amount, percentage }) => {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
       <Text style={{ color: colors.lightgrey }}>{position}</Text>
@@ -30,6 +30,17 @@ const GuessDistribution = ({ position, amount, percentage }) => {
   );
 };
 
+const GuessDistribution = () => {
+  return (
+    <>
+      <Text style={styles.subTitle}>GUESS DISTRIBUTION</Text>
+      <View style={{ padding: 20, width: '100%' }}>
+        <GuessDistributionLine position={0} amount={2} percentage={50} />
+      </View>
+    </>
+  );
+};
+
 const EndScreen = ({ won = false }) => {
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
@@ -45,11 +56,7 @@ const EndScreen = ({ won = false }) => {
         <Number number={3} label={'Max Streak'} />
       </View>
 
-      <Text style={styles.subTitle}>GUESS DISTRIBUTION</Text>
-
-      <View style={{ padding: 20, width: '100%' }}>
-        <GuessDistribution position={0} amount={2} percentage={50} />
-      </View>
+      <GuessDistribution />
     </View>
   );
 };
