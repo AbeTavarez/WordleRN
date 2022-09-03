@@ -1,4 +1,5 @@
 import { View, Text } from 'react-native';
+import { colors } from '../constants';
 import { styles } from './styles';
 
 const Number = ({ number, label }) => {
@@ -10,9 +11,28 @@ const Number = ({ number, label }) => {
   );
 };
 
+const GuessDistribution = ({ position, amount, percentage }) => {
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+      <Text style={{ color: colors.lightgrey }}>{position}</Text>
+      <View
+        style={{
+          backgroundColor: colors.grey,
+          margin: 5,
+          padding: 5,
+          alignSelf: 'stretch',
+          width: `${percentage}%`
+        }}
+      >
+        <Text style={{ color: colors.lightgrey }}>{amount}</Text>
+      </View>
+    </View>
+  );
+};
+
 const EndScreen = ({ won = false }) => {
   return (
-    <View>
+    <View style={{ width: '100%', alignItems: 'center' }}>
       <Text style={styles.title}>
         {won ? 'Congrats!' : 'Oh No!, better luck tomorrow...'}
       </Text>
@@ -26,6 +46,10 @@ const EndScreen = ({ won = false }) => {
       </View>
 
       <Text style={styles.subTitle}>GUESS DISTRIBUTION</Text>
+
+      <View style={{ padding: 20, width: '100%' }}>
+        <GuessDistribution position={0} amount={2} percentage={50} />
+      </View>
     </View>
   );
 };
