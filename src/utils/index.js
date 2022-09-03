@@ -17,3 +17,5 @@ export const getCurrentYear = () => {
   const year = now.getFullYear();
   return year;
 };
+
+export const getDayKey = () => `day-${getDayOfTheYear()}-${getCurrentYear()}`;

@@ -5,16 +5,12 @@ import Keyboard from '../Keyboard/Keyboard';
 import * as Clipboard from 'expo-clipboard';
 import WordList from '../words';
 import { styles } from './styles';
-import {
-  copyBidirectionalArr,
-  getDayOfTheYear,
-  getCurrentYear
-} from '../utils';
+import { copyBidirectionalArr, getDayOfTheYear, getDayKey } from '../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NUMBER_OF_TRIES = 6;
 const wordOfTheDay = WordList[getDayOfTheYear()];
-const dayKey = `day_${getDayOfTheYear()}:${getCurrentYear()}`; // TODO: refactor to include the year as well
+const dayKey = getDayKey();
 
 const Game = () => {
   // AsyncStorage.removeItem('@game');
