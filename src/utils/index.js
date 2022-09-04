@@ -18,4 +18,5 @@ export const getCurrentYear = () => {
   return year;
 };
 
-export const getDayKey = () => `day-${getDayOfTheYear()}-${getCurrentYear()}`;
+export const getDayKey = () =>
+  `day-${getDayOfTheYear() + 3}-${getCurrentYear()}`;

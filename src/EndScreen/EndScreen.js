@@ -115,12 +115,35 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
     ).length;
 
     setWinRate(Math.floor((100 * numbersOfWins) / keys.length)); // calculate winning rate
+
+    // Current Streak
+    let curStreakCount = 0;
+    let maxStreak = 0;
+    let prevDay = 0;
+    keys.forEach((key) => {
+      const day = parseInt(key.split('-')[1]);
+
+      if (data[key].gameState === 'won' && curStreakCount === 0) {
+        curStreakCount = 1;
+      } else if (data[key].gameState === 'won' && prevDay + 1 === day) {
+        // if is consecutive days
+        curStreakCount += 1;
+      } else {
+        if (curStreakCount > maxStreak) {
+          maxStreak = curStreakCount;
+        }
+        curStreakCount = data[key].gameState === 'won' ? 1 : 0;
+      }
+      prevDay = day;
+    });
+    setCurStreak(curStreakCount);
+    setMaxStreak(maxStreak);
   };
 
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
       <Text style={styles.title}>
-        {won ? 'Congrats! 🎉' : 'Oh No! 😢 \nbetter luck tomorrow...'}
+        {won ? 'Congrats! 🎉' : 'Oh No! 😢 \nBetter luck tomorrow...'}
       </Text>
 
       <Text style={styles.subTitle}>STATISTICS</Text>

@@ -10,7 +10,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import EndScreen from '../EndScreen';
 
 const NUMBER_OF_TRIES = 6;
-const wordOfTheDay = WordList[getDayOfTheYear()];
+// const wordOfTheDay = WordList[getDayOfTheYear()];
+//! for testing remove later
+const wordOfTheDay = 'hello';
 const dayKey = getDayKey();
 
 const Game = () => {
