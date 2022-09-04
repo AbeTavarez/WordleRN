@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { colors } from '../constants';
 import { styles } from './styles';
@@ -44,6 +45,32 @@ const GuessDistribution = () => {
 
 const EndScreen = ({ won = false }) => {
   const share = () => {};
+
+  const [secTillTomorrow, setSecTillTomorrow] = useState(0);
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const tomorrow = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1
+      );
+
+      setSecTillTomorrow((tomorrow - now) / 1000);
+    };
+
+    //* Interval
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  //TODO: Find a library to handle the day format
+  const formatSeconds = () => {
+    const hours = Math.floor(secTillTomorrow / (60 * 60));
+    const minutes = Math.floor((secTillTomorrow % (60 * 60)) / 60);
+    const seconds = Math.floor(secTillTomorrow % 60);
+    return `${hours}:${minutes}:${seconds}`;
+  };
+
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
       <Text style={styles.title}>
@@ -72,7 +99,7 @@ const EndScreen = ({ won = false }) => {
               fontWeight: 'bold'
             }}
           >
-            11:23:03
+            {formatSeconds()}
           </Text>
         </View>
 
