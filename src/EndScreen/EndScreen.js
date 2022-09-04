@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { colors } from '../constants';
 import { styles } from './styles';
 
@@ -36,12 +36,14 @@ const GuessDistribution = () => {
       <Text style={styles.subTitle}>GUESS DISTRIBUTION</Text>
       <View style={{ padding: 20, width: '100%' }}>
         <GuessDistributionLine position={0} amount={2} percentage={50} />
+        <GuessDistributionLine position={0} amount={4} percentage={70} />
       </View>
     </>
   );
 };
 
 const EndScreen = ({ won = false }) => {
+  const share = () => {};
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
       <Text style={styles.title}>
@@ -57,6 +59,38 @@ const EndScreen = ({ won = false }) => {
       </View>
 
       <GuessDistribution />
+
+      <View style={{ flexDirection: 'row', padding: 10 }}>
+        <View style={{ alignItems: 'center', flex: 1 }}>
+          <Text style={{ color: colors.lightgrey, fontSize: 16 }}>
+            Next Palabreo
+          </Text>
+          <Text
+            style={{
+              color: colors.lightgrey,
+              fontSize: 24,
+              fontWeight: 'bold'
+            }}
+          >
+            11:23:03
+          </Text>
+        </View>
+
+        <Pressable
+          onPress={share}
+          style={{
+            flex: 1,
+            backgroundColor: colors.darkgrey,
+            borderRadius: 25,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Text style={{ color: colors.lightgrey, fontWeight: 'bold' }}>
+            Share
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
