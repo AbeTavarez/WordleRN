@@ -3,6 +3,7 @@ import { View, Text, Pressable, Alert } from 'react-native';
 import { colors, colorsToEmoji } from '../constants';
 import { styles } from './styles';
 import * as Clipboard from 'expo-clipboard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Number = ({ number, label }) => {
   return (
@@ -46,6 +47,11 @@ const GuessDistribution = () => {
 
 const EndScreen = ({ won = false, rows, getCellBGColor }) => {
   const [secTillTomorrow, setSecTillTomorrow] = useState(0);
+  const [played, setPlayed] = useState(0);
+  const [winRate, setWinRate] = useState(0);
+  const [curStreak, setCurStreak] = useState(0);
+  const [maxStreak, setMaxStreak] = useState(0);
+
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -62,6 +68,11 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    readState();
+  }, []);
+
   //TODO: Find a library to handle the day format
   const formatSeconds = () => {
     const hours = Math.floor(secTillTomorrow / (60 * 60));
@@ -86,18 +97,38 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
     Alert.alert('Score copied', 'Share it on social media');
   };
 
+  const readState = async () => {
+    const dataString = await AsyncStorage.getItem('@game');
+    let data;
+    try {
+      data = JSON.parse(dataString);
+      console.log(data);
+    } catch (e) {
+      console.log("Couldn't parse the state data from async storage", e);
+    }
+    const keys = Object.keys(data); // an array with keys from days objects
+    const values = Object.values(data); // an array of game objects
+
+    setPlayed(keys.length); // number of games played
+    const numbersOfWins = values.filter(
+      (game) => game.gameState === 'won'
+    ).length;
+
+    setWinRate(Math.floor((100 * numbersOfWins) / keys.length)); // calculate winning rate
+  };
+
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
       <Text style={styles.title}>
-        {won ? 'Congrats!' : 'Oh No!, better luck tomorrow...'}
+        {won ? 'Congrats! 🎉' : 'Oh No! 😢 \nbetter luck tomorrow...'}
       </Text>
 
       <Text style={styles.subTitle}>STATISTICS</Text>
       <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-        <Number number={3} label={'Played'} />
-        <Number number={3} label={'Win %'} />
-        <Number number={3} label={'Current \nStreak'} />
-        <Number number={3} label={'Max Streak'} />
+        <Number number={played} label={'Played'} />
+        <Number number={winRate} label={'Win %'} />
+        <Number number={curStreak} label={'Current \nStreak'} />
+        <Number number={maxStreak} label={'Max Streak'} />
       </View>
 
       <GuessDistribution />
