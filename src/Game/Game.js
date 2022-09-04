@@ -149,12 +149,8 @@ const Game = () => {
   //* ===== Game State Functions
   const checkGameState = () => {
     if (checkIfWon() && gameState !== 'won') {
-      // Alert.alert('Winner Winner', 'Chicken Dinner!', [
-      //   { text: 'Share', onPress: shareScore }
-      // ]);
       setGameState('won');
     } else if (checkIfLoss() && gameState !== 'loss') {
-      // Alert.alert('Oh no, better luck tomorrow!');
       setGameState('loss');
     }
   };
