@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { colors } from '../constants';
+import { View, Text, Pressable, Alert } from 'react-native';
+import { colors, colorsToEmoji } from '../constants';
 import { styles } from './styles';
+import * as Clipboard from 'expo-clipboard';
 
 const Number = ({ number, label }) => {
   return (
@@ -43,9 +44,7 @@ const GuessDistribution = () => {
   );
 };
 
-const EndScreen = ({ won = false }) => {
-  const share = () => {};
-
+const EndScreen = ({ won = false, rows, getCellBGColor }) => {
   const [secTillTomorrow, setSecTillTomorrow] = useState(0);
   useEffect(() => {
     const updateTime = () => {
@@ -69,6 +68,22 @@ const EndScreen = ({ won = false }) => {
     const minutes = Math.floor((secTillTomorrow % (60 * 60)) / 60);
     const seconds = Math.floor(secTillTomorrow % 60);
     return `${hours}:${minutes}:${seconds}`;
+  };
+
+  const share = () => {
+    const textMap = rows
+      .map((row, rowsIdx) =>
+        row
+          .map(
+            (cell, cellIdx) => colorsToEmoji[getCellBGColor(rowsIdx, cellIdx)]
+          )
+          .join('')
+      )
+      .filter((row) => row)
+      .join('\n');
+    const shareText = `Wordle \n${textMap} \n#wordle #palabreo`;
+    Clipboard.setStringAsync(shareText);
+    Alert.alert('Score copied', 'Share it on social media');
   };
 
   return (
