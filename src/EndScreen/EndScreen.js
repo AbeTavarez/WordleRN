@@ -45,6 +45,7 @@ const GuessDistribution = ({ distribution }) => {
       <View style={{ padding: 20, width: '100%' }}></View>
       {distribution.map((dist, idx) => (
         <GuessDistributionLine
+          key={idx}
           position={idx + 1}
           amount={dist}
           percentage={(100 * dist) / sum}
@@ -158,7 +159,7 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
         const tries = gameObj.rows.filter((row) => row[0]).length;
         console.log(dist);
         dist[tries] = dist[tries] + 1;
-        setDistribution(distribution);
+        setDistribution(dist);
       }
     });
   };
