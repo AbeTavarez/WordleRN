@@ -24,7 +24,8 @@ const GuessDistributionLine = ({ position, amount, percentage }) => {
           margin: 5,
           padding: 5,
           alignSelf: 'stretch',
-          width: `${percentage}%`
+          width: `${percentage}%`,
+          minWidth: 20
         }}
       >
         <Text style={{ color: colors.lightgrey }}>{amount}</Text>
@@ -33,14 +34,22 @@ const GuessDistributionLine = ({ position, amount, percentage }) => {
   );
 };
 
-const GuessDistribution = () => {
+const GuessDistribution = ({ distribution }) => {
+  if (!distribution) {
+    return null;
+  }
+  const sum = distribution.reduce((total, dist) => dist + total);
   return (
     <>
       <Text style={styles.subTitle}>GUESS DISTRIBUTION</Text>
-      <View style={{ padding: 20, width: '100%' }}>
-        <GuessDistributionLine position={0} amount={2} percentage={50} />
-        <GuessDistributionLine position={0} amount={4} percentage={70} />
-      </View>
+      <View style={{ padding: 20, width: '100%' }}></View>
+      {distribution.map((dist, idx) => (
+        <GuessDistributionLine
+          position={idx + 1}
+          amount={dist}
+          percentage={(100 * dist) / sum}
+        />
+      ))}
     </>
   );
 };
@@ -51,6 +60,7 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
   const [winRate, setWinRate] = useState(0);
   const [curStreak, setCurStreak] = useState(0);
   const [maxStreak, setMaxStreak] = useState(0);
+  const [distribution, setDistribution] = useState(null);
 
   useEffect(() => {
     const updateTime = () => {
@@ -106,8 +116,8 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
     } catch (e) {
       console.log("Couldn't parse the state data from async storage", e);
     }
-    const keys = Object.keys(data); // an array with keys from days objects
-    const values = Object.values(data); // an array of game objects
+    const keys = Object.keys(data); // Array with keys from days objects
+    const values = Object.values(data); // Array of game objects
 
     setPlayed(keys.length); // number of games played
     const numbersOfWins = values.filter(
@@ -116,7 +126,7 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
 
     setWinRate(Math.floor((100 * numbersOfWins) / keys.length)); // calculate winning rate
 
-    // Current Streak
+    //* ===== Current Streak
     let curStreakCount = 0;
     let maxStreak = 0;
     let prevDay = 0;
@@ -138,6 +148,19 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
     });
     setCurStreak(curStreakCount);
     setMaxStreak(maxStreak);
+
+    //* ===== Distribution
+    const dist = [0, 0, 0, 0, 0, 0];
+    // values === each game object
+    values.forEach((gameObj) => {
+      if (gameObj.gameState === 'won') {
+        // return the number of rows the user played
+        const tries = gameObj.rows.filter((row) => row[0]).length;
+        console.log(dist);
+        dist[tries] = dist[tries] + 1;
+        setDistribution(distribution);
+      }
+    });
   };
 
   return (
@@ -154,7 +177,7 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
         <Number number={maxStreak} label={'Max Streak'} />
       </View>
 
-      <GuessDistribution />
+      <GuessDistribution distribution={distribution} />
 
       <View style={{ flexDirection: 'row', padding: 10 }}>
         <View style={{ alignItems: 'center', flex: 1 }}>
