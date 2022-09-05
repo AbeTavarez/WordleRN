@@ -8,6 +8,13 @@ import { styles } from './styles';
 import { copyBidirectionalArr, getDayOfTheYear, getDayKey } from '../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EndScreen from '../EndScreen';
+import Animated, {
+  SlideInDown,
+  SlideInLeft,
+  SlideInTop,
+  ZoomIn,
+  FlipInEasyY
+} from 'react-native-reanimated';
 
 const NUMBER_OF_TRIES = 6;
 // const wordOfTheDay = WordList[getDayOfTheYear()];
@@ -166,6 +173,16 @@ const Game = () => {
 
   const checkIfLoss = () => !checkIfWon() && currRow === rows.length;
 
+  const getCellStyles = (rowIdx, cellIdx) => [
+    styles.cell,
+    {
+      borderColor: isCellActive(rowIdx, cellIdx)
+        ? colors.grey
+        : colors.darkgrey,
+      backgroundColor: getCellBGColor(rowIdx, cellIdx)
+    }
+  ];
+
   if (!gameDataLoaded) return <ActivityIndicator />;
 
   if (gameState !== 'playing') {
@@ -183,24 +200,48 @@ const Game = () => {
     <>
       <ScrollView style={styles.map}>
         {rows.map((row, rowIdx) => (
-          <View key={`row-${rowIdx}`} style={styles.row}>
+          <Animated.View
+            entering={SlideInLeft.delay(rowIdx * 150)}
+            key={`row-${rowIdx}`}
+            style={styles.row}
+          >
             {row.map((cellLetter, cellIdx) => (
-              <View
-                key={`cell-${cellIdx}-${rowIdx}`}
-                style={[
-                  styles.cell,
-                  {
-                    borderColor: isCellActive(rowIdx, cellIdx)
-                      ? colors.grey
-                      : colors.darkgrey,
-                    backgroundColor: getCellBGColor(rowIdx, cellIdx)
-                  }
-                ]}
-              >
-                <Text style={styles.cellText}>{cellLetter.toUpperCase()}</Text>
-              </View>
+              <>
+                {rowIdx < currRow && (
+                  <Animated.View
+                    entering={FlipInEasyY.delay(cellIdx * 100)}
+                    key={`cell-color-${cellIdx}-${rowIdx}`}
+                    style={getCellStyles(rowIdx, cellIdx)}
+                  >
+                    <Text style={styles.cellText}>
+                      {cellLetter.toUpperCase()}
+                    </Text>
+                  </Animated.View>
+                )}
+                {rowIdx === currRow && !!cellLetter && (
+                  <Animated.View
+                    entering={ZoomIn}
+                    key={`cell-active-${cellIdx}-${rowIdx}`}
+                    style={getCellStyles(rowIdx, cellIdx)}
+                  >
+                    <Text style={styles.cellText}>
+                      {cellLetter.toUpperCase()}
+                    </Text>
+                  </Animated.View>
+                )}
+                {!cellLetter && (
+                  <View
+                    key={`cell-${cellIdx}-${rowIdx}`}
+                    style={getCellStyles(rowIdx, cellIdx)}
+                  >
+                    <Text style={styles.cellText}>
+                      {cellLetter.toUpperCase()}
+                    </Text>
+                  </View>
+                )}
+              </>
             ))}
-          </View>
+          </Animated.View>
         ))}
       </ScrollView>
 

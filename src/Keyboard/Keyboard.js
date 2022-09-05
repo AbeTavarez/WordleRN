@@ -1,8 +1,7 @@
 import { View, Text, Pressable } from 'react-native';
 import { keys, ENTER, CLEAR, colors } from '../constants';
 import styles, { keyWidth } from './styles.js';
-import Animated from 'react-native-reanimated';
-import { SlideInDown } from 'react-native-reanimated';
+import Animated, { SlideInDown } from 'react-native-reanimated';
 
 const Keyboard = ({
   onKeyPressed = () => {},
@@ -21,7 +20,7 @@ const Keyboard = ({
 
   return (
     <Animated.View
-      entering={SlideInDown.duration(1000).springify().mass(0.6)}
+      entering={SlideInDown.duration(1000).springify().mass(0.8)}
       style={styles.keyboard}
     >
       {keys.map((keyRow, idx) => (
