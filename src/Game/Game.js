@@ -48,7 +48,6 @@ const Game = () => {
   }, [currRow]);
 
   // Async data storage
-
   useEffect(() => {
     // run func when any of the dependencies changed
     if (gameDataLoaded) {
@@ -75,7 +74,7 @@ const Game = () => {
       existingState[dayKey] = todaysData;
       // writes game state data to async storage
       const dataString = JSON.stringify(existingState);
-      console.log(' ::: Saving :::', dataString);
+      // console.log(' ::: Saving :::', dataString);
       await AsyncStorage.setItem('@game', dataString);
     } catch (e) {
       console.log('Error storing game data to async storage', e);
@@ -186,7 +185,7 @@ const Game = () => {
   if (!gameDataLoaded) return <ActivityIndicator />;
 
   if (gameState !== 'playing') {
-    console.log(gameState);
+    // console.log(gameState);
     return (
       <EndScreen
         won={gameState === 'won'}

@@ -5,9 +5,7 @@ import { styles } from './styles';
 import * as Clipboard from 'expo-clipboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, {
-  SlideInDown,
   SlideInUp,
-  FadeIn,
   ZoomIn,
   SlideInLeft
 } from 'react-native-reanimated';
@@ -120,7 +118,7 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
     let data;
     try {
       data = JSON.parse(dataString);
-      console.log(data);
+      // console.log(data);
     } catch (e) {
       console.log("Couldn't parse the state data from async storage", e);
     }
@@ -160,11 +158,12 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
     //* ===== Distribution
     const dist = [0, 0, 0, 0, 0, 0];
     // values === each game object
-    values.forEach((gameObj) => {
+    values.map((gameObj) => {
       if (gameObj.gameState === 'won') {
         // return the number of rows the user played
         const tries = gameObj.rows.filter((row) => row[0]).length;
-        console.log(dist);
+        // console.log('=========tries', tries);
+        // console.log('========dist', dist);
         dist[tries] = dist[tries] + 1;
       }
     });

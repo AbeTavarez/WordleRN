@@ -7,7 +7,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      <Text style={styles.title}>Palabreo</Text>
+      <Text style={styles.title}>Prototype</Text>
       <Game />
     </SafeAreaView>
   );
