@@ -47,15 +47,16 @@ const GuessDistribution = ({ distribution }) => {
   return (
     <>
       <Text style={styles.subTitle}>GUESS DISTRIBUTION</Text>
-      <View style={{ padding: 20, width: '100%' }}></View>
-      {distribution.map((dist, idx) => (
-        <GuessDistributionLine
-          key={idx}
-          position={idx + 1}
-          amount={dist}
-          percentage={(100 * dist) / sum}
-        />
-      ))}
+      <View style={{ padding: 8, width: '100%' }}>
+        {distribution.map((dist, idx) => (
+          <GuessDistributionLine
+            key={idx}
+            position={idx + 1}
+            amount={dist}
+            percentage={(100 * dist) / sum}
+          />
+        ))}
+      </View>
     </>
   );
 };
@@ -108,7 +109,7 @@ const EndScreen = ({ won = false, rows, getCellBGColor }) => {
       )
       .filter((row) => row)
       .join('\n');
-    const shareText = `Wordle \n${textMap} \n#wordle #palabreo`;
+    const shareText = `Devle: \n${textMap} \n#Wordle #Devle`;
     Clipboard.setStringAsync(shareText);
     Alert.alert('Score copied', 'Share it on social media');
   };
