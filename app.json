@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "wordle-app",
-    "slug": "wordle-app",
+    "name": "Devle",
+    "slug": "Devle",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,6 +21,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.tacticalDevs.devle",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -28,6 +30,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e4a94e3b-3c9b-43da-beb1-29a37760baf1"
+      }
     }
   }
 }

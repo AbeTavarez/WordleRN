@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import {
+  Text,
+  View,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+  Dimensions
+} from 'react-native';
 import { colors, CLEAR, ENTER, colorsToEmoji } from '../constants';
 import Keyboard from '../Keyboard/Keyboard';
 import * as Clipboard from 'expo-clipboard';
@@ -17,12 +24,11 @@ import Animated, {
 } from 'react-native-reanimated';
 
 const NUMBER_OF_TRIES = 6;
-// const wordOfTheDay = WordList[getDayOfTheYear()];
-//! for testing remove later
-const wordOfTheDay = 'hello';
+const wordOfTheDay = WordList[getDayOfTheYear()];
 const dayKey = getDayKey();
 
 const Game = () => {
+  console.log(Dimensions.get('window').height);
   // AsyncStorage.removeItem('@game');
   const letters = wordOfTheDay.split('');
 
@@ -197,7 +203,7 @@ const Game = () => {
 
   return (
     <>
-      <ScrollView style={styles.map}>
+      <View style={styles.map}>
         {rows.map((row, rowIdx) => (
           <Animated.View
             entering={SlideInLeft.delay(rowIdx * 150)}
@@ -242,7 +248,7 @@ const Game = () => {
             ))}
           </Animated.View>
         ))}
-      </ScrollView>
+      </View>
 
       <Keyboard
         onKeyPressed={onKeyPressed}
