@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Text,
-  View,
-  ScrollView,
-  Alert,
-  ActivityIndicator,
-  Dimensions
-} from 'react-native';
+import { Text, View, ActivityIndicator, Dimensions } from 'react-native';
 import { colors, CLEAR, ENTER, colorsToEmoji } from '../constants';
 import Keyboard from '../Keyboard/Keyboard';
 import * as Clipboard from 'expo-clipboard';
@@ -16,9 +9,7 @@ import { copyBidirectionalArr, getDayOfTheYear, getDayKey } from '../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EndScreen from '../EndScreen';
 import Animated, {
-  SlideInDown,
   SlideInLeft,
-  SlideInTop,
   ZoomIn,
   FlipInEasyY
 } from 'react-native-reanimated';
@@ -28,7 +19,7 @@ const wordOfTheDay = WordList[getDayOfTheYear()];
 const dayKey = getDayKey();
 
 const Game = () => {
-  console.log(Dimensions.get('window').height);
+  // console.log(Dimensions.get('window').height);
   // AsyncStorage.removeItem('@game');
   const letters = wordOfTheDay.split('');
 
