@@ -13,5 +13,4 @@ web-build/
 # macOS
 .DS_Store
 
-# others
-words.js
+
