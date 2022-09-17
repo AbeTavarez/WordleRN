@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ActivityIndicator, Dimensions } from 'react-native';
+import { Text, View, ActivityIndicator, Dimensions, Alert } from 'react-native';
 import { colors, CLEAR, ENTER, colorsToEmoji } from '../constants';
 import Keyboard from '../Keyboard/Keyboard';
 import * as Clipboard from 'expo-clipboard';
@@ -11,7 +11,9 @@ import EndScreen from '../EndScreen';
 import Animated, {
   SlideInLeft,
   ZoomIn,
-  FlipInEasyY
+  FlipInEasyY,
+  useSharedValue,
+  useAnimatedStyle
 } from 'react-native-reanimated';
 
 const NUMBER_OF_TRIES = 6;
@@ -56,6 +58,7 @@ const Game = () => {
     readState();
   }, []);
 
+  // ===== PERSIST STATE
   const persistState = async () => {
     const todaysData = {
       rows,
@@ -78,6 +81,7 @@ const Game = () => {
     }
   };
 
+  // ===== READ STATE
   const readState = async () => {
     const dataString = await AsyncStorage.getItem('@game');
     try {
@@ -93,6 +97,7 @@ const Game = () => {
     setGameDataLoaded(true);
   };
 
+  // ===== ON KEYPRESS
   const onKeyPressed = (key) => {
     if (gameState !== 'playing') return;
     // console.warn(key);
@@ -108,8 +113,20 @@ const Game = () => {
       }
       return;
     }
-    // handles user pressing on ENTER
+
     if (key === ENTER) {
+      if (
+        currCol === rows[0].length &&
+        WordList.includes(rows[currRow].join('')) === false
+      ) {
+        Alert.alert('This word not in our word bank ❌');
+        //TODO trigger animation
+        // zeroDeg.value = 0;
+        // oneDeg.value = 1;
+        // negDeg.value = -1;
+        return;
+      }
+
       if (currCol === rows[0].length) {
         setCurrRow(currRow + 1);
         setCurrCol(0);
@@ -124,6 +141,48 @@ const Game = () => {
       setCurrCol(currCol + 1);
     }
   };
+
+  // Shake Row Animation
+  const zeroDeg = useSharedValue(0);
+  const oneDeg = useSharedValue(0);
+  const negDeg = useSharedValue(0);
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      0: {
+        transform: [{ translateX: zeroDeg.value }]
+      },
+      10: {
+        transform: [{ translateX: negDeg.value }]
+      },
+      20: {
+        transform: [{ translateX: oneDeg.value }]
+      },
+      30: {
+        transform: [{ translateX: zeroDeg.value }]
+      },
+      40: {
+        transform: [{ translateX: oneDeg.value }]
+      },
+      50: {
+        transform: [{ translateX: negDeg.value }]
+      },
+      60: {
+        transform: [{ translateX: zeroDeg.value }]
+      },
+      70: {
+        transform: [{ translateX: negDeg.value }]
+      },
+      80: {
+        transform: [{ translateX: oneDeg.value }]
+      },
+      90: {
+        transform: [{ translateX: zeroDeg.value }]
+      },
+      100: {
+        transform: [{ translateX: negDeg.value }]
+      }
+    };
+  });
 
   const isCellActive = (row, col) => row === currRow && col === currCol;
 
