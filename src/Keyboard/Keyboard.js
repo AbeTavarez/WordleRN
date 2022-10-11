@@ -36,7 +36,14 @@ const Keyboard = ({
                 { backgroundColor: getKeyBGColor(key) }
               ]}
             >
-              <Text style={styles.keyText}>{key.toUpperCase()}</Text>
+              <Text
+                style={[
+                  styles.keyText,
+                  isLongButton(key) ? { fontSize: 12 } : { fontSize: 14 }
+                ]}
+              >
+                {key.toUpperCase()}
+              </Text>
             </Pressable>
           ))}
         </View>
