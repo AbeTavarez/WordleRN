@@ -115,17 +115,15 @@ const Game = () => {
     }
 
     if (key === ENTER) {
-      if (
-        currCol === rows[0].length &&
-        WordList.includes(rows[currRow].join('')) === false
-      ) {
-        Alert.alert('This word not in our word bank ❌');
-        //TODO trigger animation
-        // zeroDeg.value = 0;
-        // oneDeg.value = 1;
-        // negDeg.value = -1;
-        return;
-      }
+      // if (currCol === rows[0].length) {
+      // WordList.includes(rows[currRow].join('')) === false
+      // Alert.alert('This word not in our word bank ❌');
+      //TODO trigger animation
+      // zeroDeg.value = 0;
+      // oneDeg.value = 1;
+      // negDeg.value = -1;
+      // return;
+      // }
 
       if (currCol === rows[0].length) {
         setCurrRow(currRow + 1);
